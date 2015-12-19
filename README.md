@@ -8,7 +8,7 @@ Installiere Redis und richte dort in Datenbank 14 die Keys
 - bot:rt
 - bot:annoyed
 - bot:trigger
-- bot:argh
+- bot:argh  
 ein.
 
 Dann:
