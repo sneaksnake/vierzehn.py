@@ -83,6 +83,9 @@ class RetweetListener(tweepy.StreamListener):
         '''
         if self.status.user.screen_name == self.me.screen_name:
             return # prevent bot from rt'ing itself
+
+        if self.is_in_status('RT'):
+            return # prevent bot from rt'ing "hardcoded" retweets
             
         for forbidden_word in self.FORBIDDEN_WORDS:
             if self.is_in_status(forbidden_word):
