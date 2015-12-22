@@ -7,7 +7,7 @@ import tweepy
 import yaml
 
 class RetweetListener(tweepy.StreamListener):
-    def __init__(self, db, api, me, retweet_words, forbidden_words):
+    def __init__(self, api, db, me, retweet_words, forbidden_words):
         logging.debug('Setting up RetweetListener...')
         self.api = api
         self.db = db
