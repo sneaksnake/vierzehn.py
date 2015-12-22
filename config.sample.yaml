@@ -3,6 +3,10 @@ consumer_secret: 'blahblahblah'
 access_token: 'blahblahblah'
 access_secret: 'blahblahblah'
 
+redis_host: 'localhost'
+redis_port: 6379
+redis_dbnr: 14
+
 retweet_words:
 - '@IchBinVierzehn'
 - 'trailerpark'

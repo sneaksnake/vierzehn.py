@@ -4,6 +4,7 @@ import os
 import sys
 
 # 3rd party modules
+import redis
 import tweepy
 import yaml
 
@@ -39,6 +40,9 @@ class VierzehnBot():
             self.CONSUMER_SECRET = self.tmp['consumer_secret']
             self.ACCESS_TOKEN = self.tmp['access_token']
             self.ACCESS_SECRET = self.tmp['access_secret']
+            self.REDIS_HOST = self.tmp['redis_host']
+            self.REDIS_PORT = self.tmp['redis_port']
+            self.REDIS_DBNR = self.tmp['redis_dbnr']
             self.RETWEET_WORDS = self.tmp['retweet_words']
             self.FORBIDDEN_WORDS = self.tmp['forbidden_words']
         except KeyError:
@@ -46,6 +50,16 @@ class VierzehnBot():
             sys.exit(0)
         else:
             self.tmp = None
+
+        try:
+            self.db = redis.StrictRedis(host=self.REDIS_HOST,
+                                        port=self.REDIS_PORT,
+                                        db=self.REDIS_DBNR)
+        except NameError:
+            logging.warning('Redis is not installed, disabling...')
+            self.db = None
+        else:
+            logging.debug('Successfully connected to redis!')
 
         self.auth = tweepy.OAuthHandler(self.CONSUMER_TOKEN, self.CONSUMER_SECRET)
         self.auth.set_access_token(self.ACCESS_TOKEN, self.ACCESS_SECRET)
@@ -60,6 +74,7 @@ class VierzehnBot():
         begins retweeting relevant content.
         '''
         self.retweet_listener = RetweetListener(self.api,
+                                                self.db,
                                                 self.me,
                                                 self.RETWEET_WORDS,
                                                 self.FORBIDDEN_WORDS)

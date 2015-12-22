@@ -5,12 +5,12 @@ import os
 # 3rd party modules
 import tweepy
 import yaml
-import redis
 
 class RetweetListener(tweepy.StreamListener):
-    def __init__(self, api, me, retweet_words, forbidden_words):
+    def __init__(self, db, api, me, retweet_words, forbidden_words):
         logging.debug('Setting up RetweetListener...')
         self.api = api
+        self.db = db
         self.me = me
         self.RETWEET_WORDS = retweet_words
         self.FORBIDDEN_WORDS = forbidden_words
@@ -25,12 +25,6 @@ class RetweetListener(tweepy.StreamListener):
             ignore_file.close()
         
         self.load_ignored_users()
-
-        try:
-            self.db = redis.StrictRedis(host='localhost', port=6379, db=14)
-        except NameError:
-            logging.warning('Redis is not installed, disabling...')
-            self.db = None
 
     def load_ignored_users(self):
         '''
