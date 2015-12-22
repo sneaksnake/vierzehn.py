@@ -127,10 +127,10 @@ class RetweetListener(tweepy.StreamListener):
 
 
         # TODO: auch schreiben, wenn er was ignoriert.
-        # TODO: auch @namen schreiben.
         try:
             self.api.retweet(self.status.id)
-            logging.info('Retweete \'{}\''.format(self.status.text))
+            logging.info('Retweete @{}: \'{}\''.format(
+                self.status.user.screen_name, self.status.text))
             if self.db is not None:
                 self.db.incr('bot:rt')
         except tweepy.TweepError:
