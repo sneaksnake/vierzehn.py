@@ -19,12 +19,12 @@ class RetweetListener(tweepy.StreamListener):
                                         '.vierzehn',
                                         'ignore.yaml')
         if not os.path.exists(self.ignore_path):
-            logging.debug('Setting up ignore-file in \'{}\'...'
-                          .format(self.ignore_path))
+            logging.debug('Setting up ignore-file in %r.' % (self.ignore_path))
             ignore_file = open(self.ignore_path, 'w')
             ignore_file.close()
         
         self.load_ignored_users()
+        logging.debug('Everything OK.')
 
     def load_ignored_users(self):
         '''
@@ -38,8 +38,7 @@ class RetweetListener(tweepy.StreamListener):
             self.ignored_users = yaml.load(ignore_file.read())
             if self.ignored_users is None:
                 self.ignored_users = []
-        logging.info('Ignoring users {}!'
-                     .format(self.ignored_users))
+        logging.info('Ignoring users %r.' % (self.ignored_users))
 
     def update_ignored_users(self, screen_name):
         '''
@@ -83,8 +82,8 @@ class RetweetListener(tweepy.StreamListener):
             
         for forbidden_word in self.FORBIDDEN_WORDS:
             if self.is_in_status(forbidden_word):
-                logging.info('Would retweet {}, but forbidden word.'.format(
-                             forbidden_word))
+                logging.info('Would retweet %r, but forbidden word.' %
+                             (forbidden_word))
                 if self.db is not None:
                     self.db.incr('bot:trigger')
                 return
@@ -93,24 +92,23 @@ class RetweetListener(tweepy.StreamListener):
             return
 
         if self.is_in_status('@ichbinvierzehn', 'du nervst'):
-            logging.info('@{} wants to be ignored.'
-                         .format(self.status.user.screen_name))
+            logging.info('@%s wants to be ignored.' %
+                         (self.status.user.screen_name))
             self.update_ignored_users(self.status.user.screen_name)
             if self.db is not None:
                 self.db.incr('bot:annoyed')
-            self.response_status = 'Ich höre ja schon auf, @{} :('.format(
-                                    self.status.user.screen_name)
+            self.response_status = 'Ich höre ja schon auf, @%s :(' % \
+                                    (self.status.user.screen_name)
             self.api.update_status(status=self.response_status,
                                    in_reply_to_status_id=self.status.id)
             return
 
         if self.is_in_status('@ichbinvierzehn', 'liebe dich'):
-            logging.info('@{} loves the bot.'
-                         .format(self.status.user.screen_name))
+            logging.info('@%s loves the bot.' % (self.status.user.screen_name))
             if self.db is not None:
                 self.db.incr('bot:ily')
-            self.response_status = 'Das ist wunderbar, @{} :)'.format(
-                                    self.status.user.screen_name)
+            self.response_status = 'Das ist wunderbar, @%s :)' % \
+                                    (self.status.user.screen_name)
             self.api.update_status(status=self.response_status,
                                    in_reply_to_status_id=self.status.id)
             return
@@ -123,8 +121,8 @@ class RetweetListener(tweepy.StreamListener):
         # TODO: auch schreiben, wenn er was ignoriert.
         try:
             self.api.retweet(self.status.id)
-            logging.info('Retweete @{}: \'{}\''.format(
-                self.status.user.screen_name, self.status.text))
+            logging.info('Retweeting @%s: %r' %
+                         (self.status.user.screen_name, self.status.text))
             if self.db is not None:
                 self.db.incr('bot:rt')
         except tweepy.TweepError:

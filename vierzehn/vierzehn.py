@@ -28,8 +28,7 @@ class VierzehnBot():
 
         self.vierzehn_dir = os.path.join(os.path.expanduser('~'), '.vierzehn')
         if not os.path.exists(self.vierzehn_dir):
-            logging.debug('Setting up app-folder in \'{}\'...'
-                          .format(self.vierzehn_dir))
+            logging.debug('Setting up app-folder in %r.' % (self.vierzehn_dir))
             os.makedirs(self.vierzehn_dir)
 
         with open(config_path) as config_file:
@@ -66,7 +65,7 @@ class VierzehnBot():
         self.api = tweepy.API(self.auth)
 
         self.me = self.api.me()
-        logging.info('Logged in as @{}'.format(self.me.screen_name))
+        logging.info('Logged in as @%s' % (self.me.screen_name))
 
     def run(self):
         '''
