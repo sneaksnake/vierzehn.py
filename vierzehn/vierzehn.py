@@ -4,7 +4,10 @@ import os
 import sys
 
 # 3rd party modules
-import redis
+try:
+    import redis
+except ImportError:
+    logging.debug('py-redis is not installed.')
 import tweepy
 import yaml
 
