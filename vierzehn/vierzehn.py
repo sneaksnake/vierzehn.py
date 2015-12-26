@@ -47,6 +47,7 @@ class VierzehnBot():
             self.REDIS_DBNR = self.tmp['redis_dbnr']
             self.RETWEET_WORDS = self.tmp['retweet_words']
             self.FORBIDDEN_WORDS = self.tmp['forbidden_words']
+            self.FORBIDDEN_APPS = self.tmp['forbidden_apps']
         except KeyError:
             logging.critical('Invalid config file! (has to be case-sensitive)')
             sys.exit(0)
@@ -79,7 +80,8 @@ class VierzehnBot():
                                                 self.db,
                                                 self.me,
                                                 self.RETWEET_WORDS,
-                                                self.FORBIDDEN_WORDS)
+                                                self.FORBIDDEN_WORDS,
+                                                self.FORBIDDEN_APPS)
         self.stream = tweepy.Stream(auth=self.api.auth,
                                     listener=self.retweet_listener)
 

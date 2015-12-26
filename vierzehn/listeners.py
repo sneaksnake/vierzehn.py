@@ -7,13 +7,14 @@ import tweepy
 import yaml
 
 class RetweetListener(tweepy.StreamListener):
-    def __init__(self, api, db, me, retweet_words, forbidden_words):
+    def __init__(self, api, db, me, retweet_words, forbidden_words, forbidden_apps):
         logging.debug('Setting up RetweetListener...')
         self.api = api
         self.db = db
         self.me = me
         self.RETWEET_WORDS = retweet_words
         self.FORBIDDEN_WORDS = forbidden_words
+        self.FORBIDDEN_APPS = forbidden_apps
 
         self.ignore_path = os.path.join(os.path.expanduser('~'),
                                         '.vierzehn',
@@ -88,7 +89,13 @@ class RetweetListener(tweepy.StreamListener):
                     self.db.incr('bot:trigger')
                 return
 
+        if self.status.source in self.FORBIDDEN_APPS:
+            logging.info('Ignoring tweet sent by %s.' % (self.status.source))
+            return
+
         if self.status.user.screen_name in self.ignored_users:
+            logging.info('Would retweet from @%s, but ignored.' %
+                         (self.status.user.screen_name))
             return
 
         if self.is_in_status('@ichbinvierzehn', 'du nervst'):
@@ -121,6 +128,8 @@ class RetweetListener(tweepy.StreamListener):
         # TODO: auch schreiben, wenn er was ignoriert.
         try:
             self.api.retweet(self.status.id)
+            import pprint
+            pprint.pprint(self.status.source)
             logging.info('Retweeting @%s: %r' %
                          (self.status.user.screen_name, self.status.text))
             if self.db is not None:

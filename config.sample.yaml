@@ -14,6 +14,8 @@ retweet_words:
 - 'babobus'
 - 'longboardtour'
 - '257er'
+- 'tattookette'
+- 'tattooketten'
 
 forbidden_words:
 - 'schlampe'
@@ -59,3 +61,7 @@ forbidden_words:
 - 'stiefel'
 - 'leder'
 - 'stiletto'
+
+forbidden_apps:
+- 'IFTTT'
+- 'WordPress.com'
