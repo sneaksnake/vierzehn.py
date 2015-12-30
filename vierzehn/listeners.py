@@ -90,7 +90,7 @@ class RetweetListener(tweepy.StreamListener):
                 return
 
         if self.status.source in self.FORBIDDEN_APPS:
-            logging.info('Ignoring tweet sent by %s.' % (self.status.source))
+            logging.info('Ignoring tweet sent via %s.' % (self.status.source))
             return
 
         if self.status.user.screen_name in self.ignored_users:
@@ -125,11 +125,8 @@ class RetweetListener(tweepy.StreamListener):
             return
 
 
-        # TODO: auch schreiben, wenn er was ignoriert.
         try:
             self.api.retweet(self.status.id)
-            import pprint
-            pprint.pprint(self.status.source)
             logging.info('Retweeting @%s: %r' %
                          (self.status.user.screen_name, self.status.text))
             if self.db is not None:
