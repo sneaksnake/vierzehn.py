@@ -61,7 +61,12 @@ forbidden_words:
 - 'stiefel'
 - 'leder'
 - 'stiletto'
+- 'shoppen'
+- 'stockings'
+- 'size'
 
 forbidden_apps:
 - 'IFTTT'
 - 'WordPress.com'
+- 'Instagram'
+- 'Google'
