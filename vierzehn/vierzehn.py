@@ -87,6 +87,8 @@ class VierzehnBot():
 
         try:
             self.stream.filter(track=self.RETWEET_WORDS)
+        except AttributeError:
+            self.stream.filter(track=self.RETWEET_WORDS)
         except KeyboardInterrupt:
             logging.info('Interrupted by user, shutting down...')
             sys.exit(0)
