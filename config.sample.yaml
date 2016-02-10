@@ -64,9 +64,13 @@ forbidden_words:
 - 'shoppen'
 - 'stockings'
 - 'size'
+- 'boots'
+- 'collection'
+- 'SchnÃ¼rung'
 
 forbidden_apps:
 - 'IFTTT'
 - 'WordPress.com'
 - 'Instagram'
 - 'Google'
+- 'dlvr.it'
