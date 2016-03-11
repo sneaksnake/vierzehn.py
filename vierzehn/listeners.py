@@ -16,9 +16,11 @@ class RetweetListener(tweepy.StreamListener):
         self.FORBIDDEN_WORDS = forbidden_words
         self.FORBIDDEN_APPS = forbidden_apps
 
-        self.ignore_path = os.path.join(os.path.expanduser('~'),
-                                        '.vierzehn',
-                                        'ignore.yaml')
+        self.ignore_path = os.path.join(
+            os.path.expanduser('~'),
+            '.vierzehn',
+            'ignore.yaml'
+        )
         if not os.path.exists(self.ignore_path):
             logging.debug('Setting up ignore-file in %r.' % (self.ignore_path))
             ignore_file = open(self.ignore_path, 'w')
@@ -26,6 +28,7 @@ class RetweetListener(tweepy.StreamListener):
         
         self.load_ignored_users()
         logging.debug('Everything OK.')
+        logging.info('Listening to %r...' % retweet_words)
 
     def load_ignored_users(self):
         '''
@@ -132,5 +135,4 @@ class RetweetListener(tweepy.StreamListener):
             if self.db is not None:
                 self.db.incr('bot:rt')
         except tweepy.TweepError:
-            # Laufen lassen -> fixen? o.O
             pass

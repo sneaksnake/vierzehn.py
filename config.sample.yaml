@@ -7,8 +7,9 @@ redis_host: 'localhost'
 redis_port: 6379
 redis_dbnr: 14
 
+react_to_mention: true
+
 retweet_words:
-- '@IchBinVierzehn'
 - 'trailerpark'
 - 'overknees'
 - 'babobus'
@@ -67,6 +68,10 @@ forbidden_words:
 - 'boots'
 - 'collection'
 - 'SchnÃ¼rung'
+- 'heels'
+- 'fussfetisch'
+- 'fuck'
+- 'cumplay'
 
 forbidden_apps:
 - 'IFTTT'
@@ -74,3 +79,5 @@ forbidden_apps:
 - 'Instagram'
 - 'Google'
 - 'dlvr.it'
+- 'twitterfeed'
+- 'twittbot.net'

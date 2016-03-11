@@ -42,6 +42,7 @@ class VierzehnBot():
             self.CONSUMER_SECRET = self.tmp['consumer_secret']
             self.ACCESS_TOKEN = self.tmp['access_token']
             self.ACCESS_SECRET = self.tmp['access_secret']
+            self.REACT_TO_MENTION = self.tmp['react_to_mention']
             self.REDIS_HOST = self.tmp['redis_host']
             self.REDIS_PORT = self.tmp['redis_port']
             self.REDIS_DBNR = self.tmp['redis_dbnr']
@@ -55,9 +56,11 @@ class VierzehnBot():
             self.tmp = None
 
         try:
-            self.db = redis.StrictRedis(host=self.REDIS_HOST,
-                                        port=self.REDIS_PORT,
-                                        db=self.REDIS_DBNR)
+            self.db = redis.StrictRedis(
+                host=self.REDIS_HOST,
+                port=self.REDIS_PORT,
+                db=self.REDIS_DBNR,
+            )
         except NameError:
             logging.warning('Redis is not installed, disabling...')
             self.db = None
@@ -71,24 +74,32 @@ class VierzehnBot():
         self.me = self.api.me()
         logging.info('Logged in as @%s' % (self.me.screen_name))
 
+        if self.REACT_TO_MENTION:
+            logging.info('React-to-mention enabled.')
+            self.RETWEET_WORDS.append('@%s' % self.me.screen_name)
+        else:
+            logging.info('React-to-mention disabled.')
+
     def run(self):
         '''
         Sets up the RetweetListener, the Stream object and
         begins retweeting relevant content.
         '''
-        self.retweet_listener = RetweetListener(self.api,
-                                                self.db,
-                                                self.me,
-                                                self.RETWEET_WORDS,
-                                                self.FORBIDDEN_WORDS,
-                                                self.FORBIDDEN_APPS)
+        self.retweet_listener = RetweetListener(
+            api=self.api,
+            db=self.db,
+            me=self.me,
+            retweet_words=self.RETWEET_WORDS,
+            forbidden_words=self.FORBIDDEN_WORDS,
+            forbidden_apps=self.FORBIDDEN_APPS
+        )
         self.stream = tweepy.Stream(auth=self.api.auth,
                                     listener=self.retweet_listener)
 
         try:
             self.stream.filter(track=self.RETWEET_WORDS)
-        except AttributeError:
-            self.stream.filter(track=self.RETWEET_WORDS)
         except KeyboardInterrupt:
             logging.info('Interrupted by user, shutting down...')
             sys.exit(0)
+        except:
+            self.stream.filter(track=self.RETWEET_WORDS)
